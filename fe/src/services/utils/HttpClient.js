@@ -11,10 +11,11 @@ class HttpClient {
     });
   }
 
-  post(path, body) {
+  post(path, options) {
     return this.makeRequest(path, {
       method: 'POST',
-      body: JSON.stringify(body),
+      body: options?.body,
+      headers: options?.headers,
     });
   }
 

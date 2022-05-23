@@ -21,6 +21,7 @@ export default function ContactForm({ buttonLabel, onSubmit }) {
   const [categoryId, setCategoryId] = useState('');
   const [categories, setCategories] = useState([]);
   const [isLoadingCategories, setLoadingCategories] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     errors,
@@ -76,8 +77,12 @@ export default function ContactForm({ buttonLabel, onSubmit }) {
   function handleSubmit(event) {
     event.preventDefault();
 
+    setIsSubmitting(true);
+
     onSubmit({
       name, email, phone, categoryId,
+    }).finally(() => {
+      setIsSubmitting(false);
     });
   }
   return (
@@ -88,6 +93,7 @@ export default function ContactForm({ buttonLabel, onSubmit }) {
           placeholder="Nome *"
           value={name}
           onChange={handleChangeName}
+          disabled={isSubmitting}
         />
       </FormGroup>
 
@@ -98,6 +104,7 @@ export default function ContactForm({ buttonLabel, onSubmit }) {
           placeholder="E-mail"
           value={email}
           onChange={handleEmailChange}
+          disabled={isSubmitting}
         />
       </FormGroup>
 
@@ -107,6 +114,7 @@ export default function ContactForm({ buttonLabel, onSubmit }) {
           value={phone}
           onChange={handlePhoneChange}
           maxLength="15"
+          disabled={isSubmitting}
         />
       </FormGroup>
 
@@ -114,7 +122,7 @@ export default function ContactForm({ buttonLabel, onSubmit }) {
         <Select
           value={categoryId}
           onChange={(event) => setCategoryId(event.target.value)}
-          disabled={isLoadingCategories}
+          disabled={isLoadingCategories || isSubmitting}
         >
           <option value="">Sem Categoria</option>
 
@@ -129,7 +137,11 @@ export default function ContactForm({ buttonLabel, onSubmit }) {
         </Select>
       </FormGroup>
 
-      <Button type="submit" disabled={!isFormValid}>
+      <Button
+        type="submit"
+        disabled={!isFormValid}
+        isLoading={isSubmitting}
+      >
         {buttonLabel}
       </Button>
 
