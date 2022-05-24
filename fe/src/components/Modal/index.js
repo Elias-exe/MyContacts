@@ -1,18 +1,23 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import { Overlay, Container, Footer } from './styles';
 import Button from '../Button';
 
 export default function Modal({ danger }) {
+  function refreshPage() {
+    window.location.reload();
+  }
+
   return ReactDOM.createPortal(
     <Overlay>
       <Container danger={danger}>
-        <h1>Título do modal</h1>
+        <h1>Tem certeza que deseja excluir </h1>
         <p>
-          Corpo do modal
+          Esta ação não pode ser desfeita!
         </p>
         <Footer>
-          <button type="button" className="cancelButton">
+          <button type="button" className="cancelButton" onClick={refreshPage}>
             Cancelar
           </button>
           <Button danger type="button">

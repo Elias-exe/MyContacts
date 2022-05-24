@@ -11,6 +11,7 @@ import {
 
 import Loader from '../../components/Loader';
 import Button from '../../components/Button';
+import Modal from '../../components/Modal';
 
 import arrow from '../../assets/images/icons/arrow.svg';
 import edit from '../../assets/images/icons/edit.svg';
@@ -27,6 +28,7 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const [deleteContact, setDeleteContact] = useState(false);
 
   const filteredContacts = useMemo(() => contacts.filter(
     (contact) => (
@@ -67,10 +69,16 @@ export default function Home() {
     loadContacts();
   }
 
+  function handleDeleteContact() {
+    setDeleteContact(true);
+  }
+
   return (
     <Container>
+      {deleteContact && (
+      <Modal danger />
+      )}
       <Loader isLoading={isLoading} />
-
       {contacts.length > 0 && (
         <InputSearchContainer>
           <input
@@ -161,7 +169,7 @@ export default function Home() {
               <Link to={`/edit/${contact.id}`}>
                 <img src={edit} alt="Edit" />
               </Link>
-              <button type="button">
+              <button type="button" onClick={handleDeleteContact}>
                 <img src={trash} alt="Delete" />
               </button>
             </div>
