@@ -41,7 +41,6 @@ export default function Home() {
       setIsLoading(true);
 
       const contactsList = await ContactsService.listContacts(orderBy);
-
       setHasError(false);
       setContacts(contactsList);
     } catch {
