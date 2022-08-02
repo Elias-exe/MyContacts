@@ -4,24 +4,30 @@ import ReactDOM from 'react-dom';
 import { Overlay, Container, Footer } from './styles';
 import Button from '../Button';
 
-export default function Modal({ danger }) {
-  function refreshPage() {
-    window.location.reload();
-  }
-
+export default function Modal({
+  danger,
+  title,
+  children,
+  cancelLabel,
+  deleteLabel,
+  onCancelButton,
+  onDeleteButton,
+}) {
   return ReactDOM.createPortal(
     <Overlay>
       <Container danger={danger}>
-        <h1>Tem certeza que deseja excluir </h1>
-        <p>
-          Esta ação não pode ser desfeita!
-        </p>
+        <h1>{title} </h1>
+
+        <div className="modal-body">
+          {children}
+        </div>
+
         <Footer>
-          <button type="button" className="cancelButton" onClick={refreshPage}>
-            Cancelar
+          <button type="button" className="cancelButton" onClick={onCancelButton}>
+            {cancelLabel}
           </button>
-          <Button danger type="button">
-            Deletar
+          <Button danger type="button" onClick={onDeleteButton}>
+            {deleteLabel}
           </Button>
         </Footer>
       </Container>
@@ -32,8 +38,16 @@ export default function Modal({ danger }) {
 
 Modal.propTypes = {
   danger: PropTypes.bool,
+  title: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+  cancelLabel: PropTypes.string,
+  deleteLabel: PropTypes.string,
+  onCancelButton: PropTypes.func.isRequired,
+  onDeleteButton: PropTypes.func.isRequired,
 };
 
 Modal.defaultProps = {
   danger: false,
+  cancelLabel: 'Cancelar',
+  deleteLabel: 'Deletar',
 };

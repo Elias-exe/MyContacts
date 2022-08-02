@@ -28,7 +28,6 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
-  const [deleteContact, setDeleteContact] = useState(false);
 
   const filteredContacts = useMemo(() => contacts.filter(
     (contact) => (
@@ -68,15 +67,18 @@ export default function Home() {
     loadContacts();
   }
 
-  function handleDeleteContact() {
-    setDeleteContact(true);
-  }
-
   return (
     <Container>
-      {deleteContact && (
-      <Modal danger />
-      )}
+
+      <Modal
+        danger
+        title="Tem certeza que deseja excluir"
+        onCancelButton={() => alert('Cancelar')}
+        onDeleteButton={() => alert('Deletar')}
+      >
+        <p>Essa ação não pode ser desfeita!</p>
+      </Modal>
+
       <Loader isLoading={isLoading} />
       {contacts.length > 0 && (
         <InputSearchContainer>
@@ -168,7 +170,7 @@ export default function Home() {
               <Link to={`/edit/${contact.id}`}>
                 <img src={edit} alt="Edit" />
               </Link>
-              <button type="button" onClick={handleDeleteContact}>
+              <button type="button">
                 <img src={trash} alt="Delete" />
               </button>
             </div>
