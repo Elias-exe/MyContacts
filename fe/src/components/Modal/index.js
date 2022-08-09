@@ -1,11 +1,13 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
 import { Overlay, Container, Footer } from './styles';
 import Button from '../Button';
+import ReactPortal from '../ReactPortal';
 
 export default function Modal({
   danger,
+  isDeleteModalIsVisible,
+  isLoadingDeleteContact,
   title,
   children,
   cancelLabel,
@@ -13,31 +15,38 @@ export default function Modal({
   onCancelButton,
   onDeleteButton,
 }) {
-  return ReactDOM.createPortal(
-    <Overlay>
-      <Container danger={danger}>
-        <h1>{title} </h1>
+  if (!isDeleteModalIsVisible) {
+    return null;
+  }
 
-        <div className="modal-body">
-          {children}
-        </div>
+  return (
+    <ReactPortal containerId="modal-root">
+      <Overlay>
+        <Container danger={danger}>
+          <h1>{title} </h1>
 
-        <Footer>
-          <button type="button" className="cancelButton" onClick={onCancelButton}>
-            {cancelLabel}
-          </button>
-          <Button danger type="button" onClick={onDeleteButton}>
-            {deleteLabel}
-          </Button>
-        </Footer>
-      </Container>
-    </Overlay>,
-    document.getElementById('modal-root'),
+          <div className="modal-body">
+            {children}
+          </div>
+
+          <Footer>
+            <button type="button" className="cancelButton" onClick={onCancelButton} disabled={isLoadingDeleteContact}>
+              {cancelLabel}
+            </button>
+            <Button danger type="button" onClick={onDeleteButton} isLoading={isLoadingDeleteContact}>
+              {deleteLabel}
+            </Button>
+          </Footer>
+        </Container>
+      </Overlay>
+    </ReactPortal>
   );
 }
 
 Modal.propTypes = {
   danger: PropTypes.bool,
+  isLoadingDeleteContact: PropTypes.bool,
+  isDeleteModalIsVisible: PropTypes.bool.isRequired,
   title: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
   cancelLabel: PropTypes.string,
@@ -48,6 +57,7 @@ Modal.propTypes = {
 
 Modal.defaultProps = {
   danger: false,
+  isLoadingDeleteContact: false,
   cancelLabel: 'Cancelar',
   deleteLabel: 'Deletar',
 };
