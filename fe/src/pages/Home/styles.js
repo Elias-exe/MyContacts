@@ -20,7 +20,7 @@ export const InputSearchContainer = styled.div`
   &::placeholder{
     color: #BCBCBC;
   }
-  }
+}
 `;
 
 export const Header = styled.header`

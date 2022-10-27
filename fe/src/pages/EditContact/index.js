@@ -1,10 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import ContactsService from '../../services/ContactsService';
 import ContactForm from '../../components/ContactForm';
 import PageHeader from '../../components/PageHeader';
 import Loader from '../../components/Loader';
 import toast from '../../utils/toast';
+import { CategoryContainer } from './styles';
 
 export default function EditContact() {
   const [contactName, setContactName] = useState('');
@@ -13,15 +14,8 @@ export default function EditContact() {
   const params = useParams();
   const history = useHistory();
 
-  async function handleSubmit(formData) {
+  async function handleSubmit(contact) {
     try {
-      const contact = {
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        category_id: formData.categoryId,
-      };
-
       const updateContactData = await ContactsService.editContact(params.id, contact);
 
       setContactName(updateContactData.name);
@@ -67,6 +61,9 @@ export default function EditContact() {
       <PageHeader
         title={isLoading ? 'Carregando...' : `Editar ${contactName}`}
       />
+      <CategoryContainer>
+        <Link to="/newCategory">Nova Categoria</Link>
+      </CategoryContainer>
       <ContactForm
         ref={contactFormRef}
         onSubmit={handleSubmit}
