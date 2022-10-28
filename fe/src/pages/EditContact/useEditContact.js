@@ -2,9 +2,8 @@ import { useEffect, useState, useRef } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import ContactsService from '../../services/ContactsService';
 import toast from '../../utils/toast';
-import Presentation from './Presentation';
 
-export default function Container() {
+export default function useEditContact() {
   const [contactName, setContactName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const contactFormRef = useRef(null);
@@ -52,12 +51,10 @@ export default function Container() {
     loadContact();
   }, [history, params]);
 
-  return (
-    <Presentation
-      contactName={contactName}
-      contactFormRef={contactFormRef}
-      isLoading={isLoading}
-      onSubmit={handleSubmit}
-    />
-  );
+  return {
+    isLoading,
+    contactName,
+    contactFormRef,
+    handleSubmit,
+  };
 }
