@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 import PropTypes from 'prop-types';
+import { useEffect, useRef, useState } from 'react';
 import { Overlay, Container, Footer } from './styles';
 import Button from '../Button';
 import ReactPortal from '../ReactPortal';
@@ -15,14 +16,38 @@ export default function Modal({
   onCancelButton,
   onDeleteButton,
 }) {
-  if (!isDeleteModalIsVisible) {
+  const [shouldRender, setShouldRender] = useState(isDeleteModalIsVisible);
+  const overlayRef = useRef(null);
+
+  useEffect(() => {
+    if (isDeleteModalIsVisible) {
+      setShouldRender(true);
+    }
+
+    function handleAnimationEnd() {
+      setShouldRender(false);
+    }
+
+    const overlayRefElement = overlayRef.current;
+    if (!isDeleteModalIsVisible && overlayRefElement) {
+      overlayRefElement.addEventListener('animationend', handleAnimationEnd);
+    }
+
+    return () => {
+      if (overlayRefElement) {
+        overlayRefElement.removeEventListener('animationend', handleAnimationEnd);
+      }
+    };
+  }, [isDeleteModalIsVisible]);
+
+  if (!shouldRender) {
     return null;
   }
 
   return (
     <ReactPortal containerId="modal-root">
-      <Overlay>
-        <Container danger={danger}>
+      <Overlay isLeaving={!isDeleteModalIsVisible} ref={overlayRef}>
+        <Container danger={danger} isLeaving={!isDeleteModalIsVisible}>
           <h1>{title} </h1>
 
           <div className="modal-body">

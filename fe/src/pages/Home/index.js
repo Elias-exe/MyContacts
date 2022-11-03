@@ -33,10 +33,15 @@ export default function Home() {
     handleVisibleDeleteModal,
   } = useHome();
 
+  const hasContact = contacts.length > 0;
+  const isEmptyList = !hasError && (contacts.length < 1 && !isLoading);
+  const isSearchEmpty = !hasError && (hasContact && filteredContacts.length < 1);
+  const hasFilteredContact = filteredContacts.length > 0;
+
   return (
     <Container>
       <Loader isLoading={isLoading} />
-      {contacts.length > 0 && (
+      {hasContact && (
         <InputSearch
           value={searchTerm}
           change={handleChangeSearchTerm}
@@ -49,21 +54,13 @@ export default function Home() {
         hasError={hasError}
       />
 
-      {hasError && (
-      <Error onTryAgain={handleTryAgain} />
-      )}
+      {hasError && <Error onTryAgain={handleTryAgain} />}
+      {isEmptyList && <EmptyList />}
+      {isSearchEmpty && <SearchNotFound searchTerm={searchTerm} />}
 
-      {!hasError && (
+      {hasContact && (
       <>
-        {(contacts.length < 1 && !isLoading) && (
-          <EmptyList />
-        )}
-
-        {(contacts.length > 0 && filteredContacts.length < 1) && (
-          <SearchNotFound searchTerm={searchTerm} />
-        )}
-
-        {filteredContacts.length > 0 && (
+        {hasFilteredContact && (
         <ListHeader orderBy={orderBy} onToggleOrderBy={handleToggleOrderBy} />
         )}
 
