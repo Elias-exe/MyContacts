@@ -1,9 +1,9 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 import PropTypes from 'prop-types';
-import { useEffect, useRef, useState } from 'react';
 import { Overlay, Container, Footer } from './styles';
 import Button from '../Button';
 import ReactPortal from '../ReactPortal';
+import useAnimatedUnmount from '../../hooks/useAnimatedUnmout';
 
 export default function Modal({
   danger,
@@ -16,37 +16,14 @@ export default function Modal({
   onCancelButton,
   onDeleteButton,
 }) {
-  const [shouldRender, setShouldRender] = useState(isDeleteModalIsVisible);
-  const overlayRef = useRef(null);
-
-  useEffect(() => {
-    if (isDeleteModalIsVisible) {
-      setShouldRender(true);
-    }
-
-    function handleAnimationEnd() {
-      setShouldRender(false);
-    }
-
-    const overlayRefElement = overlayRef.current;
-    if (!isDeleteModalIsVisible && overlayRefElement) {
-      overlayRefElement.addEventListener('animationend', handleAnimationEnd);
-    }
-
-    return () => {
-      if (overlayRefElement) {
-        overlayRefElement.removeEventListener('animationend', handleAnimationEnd);
-      }
-    };
-  }, [isDeleteModalIsVisible]);
-
+  const { shouldRender, animatedElementRef } = useAnimatedUnmount(isDeleteModalIsVisible);
   if (!shouldRender) {
     return null;
   }
 
   return (
     <ReactPortal containerId="modal-root">
-      <Overlay isLeaving={!isDeleteModalIsVisible} ref={overlayRef}>
+      <Overlay isLeaving={!isDeleteModalIsVisible} ref={animatedElementRef}>
         <Container danger={danger} isLeaving={!isDeleteModalIsVisible}>
           <h1>{title} </h1>
 
