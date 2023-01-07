@@ -1,4 +1,5 @@
 import {
+  useEffect,
   useRef, useCallback, useState, createRef,
 } from 'react';
 
@@ -8,18 +9,30 @@ export default function useAnimatedList(initialValue) {
 
   const animatedRefs = useRef(new Map());
 
+  const handleAnimationEnd = useCallback((id) => {
+    setItems((prevState) => prevState.filter((item) => item.id !== id));
+    setPendingRemovalItemIds(
+      (prevState) => prevState.filter((itemId) => itemId !== id),
+    );
+  }, []);
+
+  useEffect(() => {
+    pendingRemovalItemsIds.forEach((itemId) => {
+      const animatedRef = animatedRefs.current.get(itemId);
+
+      if (animatedRef?.current) {
+        animatedRef.current.addEventListener('animationend', () => {
+          handleAnimationEnd(itemId);
+        });
+      }
+    });
+  }, [pendingRemovalItemsIds, handleAnimationEnd]);
+
   const handleRemoveItem = useCallback((id) => {
     setPendingRemovalItemIds(
       (prevState) => [...prevState, id],
     );
   }, []);
-
-  // const handleAnimationEnd = useCallback((id) => {
-  //  setItems((prevState) => prevState.filter((item) => item.id !== id));
-  //  setPendingRemovalItemIds(
-  //    (prevState) => prevState.filter((itemId) => itemId !== id),
-  // );
-  // }, []);
 
   const getAnimatedRef = useCallback((itemId) => {
     let animatedRef = animatedRefs.current.get(itemId);
