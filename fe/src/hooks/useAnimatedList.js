@@ -8,6 +8,7 @@ export default function useAnimatedList(initialValue) {
   const [pendingRemovalItemsIds, setPendingRemovalItemIds] = useState([]);
 
   const animatedRefs = useRef(new Map());
+  const animationEndListener = useRef(new Map());
 
   const handleAnimationEnd = useCallback((id) => {
     setItems((prevState) => prevState.filter((item) => item.id !== id));
@@ -19,8 +20,11 @@ export default function useAnimatedList(initialValue) {
   useEffect(() => {
     pendingRemovalItemsIds.forEach((itemId) => {
       const animatedRef = animatedRefs.current.get(itemId);
+      const alreadyHasListener = animationEndListener.has(itemId);
 
-      if (animatedRef?.current) {
+      if (animatedRef?.current && !alreadyHasListener) {
+        animationEndListener.current.set(itemId, true);
+
         animatedRef.current.addEventListener('animationend', () => {
           handleAnimationEnd(itemId);
         });
@@ -41,6 +45,8 @@ export default function useAnimatedList(initialValue) {
       animatedRef = createRef();
       animatedRefs.current.set(itemId, animatedRef);
     }
+
+    return animatedRef;
   }, []);
 
   const renderList = useCallback((renderItem) => (
