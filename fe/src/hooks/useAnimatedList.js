@@ -10,27 +10,44 @@ export default function useAnimatedList(initialValue) {
   const animatedRefs = useRef(new Map());
   const animationEndListener = useRef(new Map());
 
-  const handleAnimationEnd = useCallback((id) => {
-    setItems((prevState) => prevState.filter((item) => item.id !== id));
+  const handleAnimationEnd = useCallback((itemId) => {
+    const removeListener = animationEndListener.current.get(itemId);
+    removeListener();
+
+    animationEndListener.current.delete(itemId);
+    animatedRefs.current.delete(itemId);
+
+    setItems((prevState) => prevState.filter((item) => item.id !== itemId));
     setPendingRemovalItemIds(
-      (prevState) => prevState.filter((itemId) => itemId !== id),
+      (prevState) => prevState.filter((id) => itemId !== id),
     );
   }, []);
 
   useEffect(() => {
     pendingRemovalItemsIds.forEach((itemId) => {
       const animatedRef = animatedRefs.current.get(itemId);
-      const alreadyHasListener = animationEndListener.has(itemId);
+      const animatedElement = animatedRef?.current;
+      const alreadyHasListener = animationEndListener.current.has(itemId);
 
-      if (animatedRef?.current && !alreadyHasListener) {
-        animationEndListener.current.set(itemId, true);
+      if (animatedElement && !alreadyHasListener) {
+        const onAnimationEnd = () => handleAnimationEnd(itemId);
+        const removeListener = () => {
+          animatedElement.removeEventListener('animationend', onAnimationEnd);
+        };
 
-        animatedRef.current.addEventListener('animationend', () => {
-          handleAnimationEnd(itemId);
-        });
+        animatedElement.addEventListener('animationend', onAnimationEnd);
+        animationEndListener.current.set(itemId, removeListener);
       }
     });
   }, [pendingRemovalItemsIds, handleAnimationEnd]);
+
+  useEffect(() => {
+    const removeListeners = animationEndListener.current;
+
+    return () => {
+      removeListeners.forEach((removeListener) => removeListener());
+    };
+  }, []);
 
   const handleRemoveItem = useCallback((id) => {
     setPendingRemovalItemIds(
