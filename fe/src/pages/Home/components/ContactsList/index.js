@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types';
 
+import { memo } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Container } from './styles';
 import edit from '../../../../assets/images/icons/edit.svg';
 import trash from '../../../../assets/images/icons/trash.svg';
 
-export default function ContactsList({
+function ContactsList({
   contact, onVisibleDeleteModal,
 }) {
   return (
@@ -49,3 +50,5 @@ ContactsList.propTypes = {
   }).isRequired,
   onVisibleDeleteModal: PropTypes.func.isRequired,
 };
+
+export default memo(ContactsList);

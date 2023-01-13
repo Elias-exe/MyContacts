@@ -1,5 +1,5 @@
 import {
-  useEffect, useState, useMemo, useCallback,
+  useEffect, useState, useCallback, useMemo, useDeferredValue,
 } from 'react';
 
 import toast from '../../utils/toast';
@@ -16,11 +16,13 @@ export default function useHome() {
   const [contactBeingDelete, setContactBeingDelete] = useState(null);
   const [isLoadingDeleteContact, setIsLoadingDeleteContact] = useState(false);
 
+  const deferredSearchTerm = useDeferredValue(searchTerm);
+
   const filteredContacts = useMemo(() => contacts.filter(
     (contact) => (
-      contact.name.toLowerCase().includes(searchTerm.toLowerCase())
+      contact.name.toLowerCase().includes(deferredSearchTerm.toLowerCase())
     ),
-  ), [contacts, searchTerm]);
+  ), [contacts, deferredSearchTerm]);
 
   const loadContacts = useCallback(async () => {
     try {
@@ -41,11 +43,11 @@ export default function useHome() {
     loadContacts();
   }, [loadContacts]);
 
-  function handleToggleOrderBy() {
+  const handleToggleOrderBy = useCallback(() => {
     setOrderBy(
       (prevState) => (prevState === 'asc' ? 'desc' : 'asc'),
     );
-  }
+  }, []);
 
   function handleChangeSearchTerm(event) {
     setSearchTerm(event.target.value);

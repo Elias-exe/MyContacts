@@ -50,7 +50,7 @@ export default function useContactForm(onSubmit, ref) {
     }
 
     loadCategories();
-  }, []);
+  }, [setCategories, setLoadingCategories]);
 
   function handleEmailChange(event) {
     setEmail(event.target.value);
