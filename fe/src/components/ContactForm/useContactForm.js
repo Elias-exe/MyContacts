@@ -37,10 +37,11 @@ export default function useContactForm(onSubmit, ref) {
   }), []);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     async function loadCategories() {
       try {
-        const categoriesList = await CategoriesService.listCategories();
-        setLoadingCategories(true);
+        const categoriesList = await CategoriesService.listCategories(controller.signal);
         setCategories(categoriesList);
       } catch {
 
@@ -50,7 +51,11 @@ export default function useContactForm(onSubmit, ref) {
     }
 
     loadCategories();
-  }, [setCategories, setLoadingCategories]);
+
+    return () => {
+      controller.abort();
+    };
+  }, []);
 
   function handleEmailChange(event) {
     setEmail(event.target.value);
