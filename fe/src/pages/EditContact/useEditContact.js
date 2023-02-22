@@ -1,14 +1,18 @@
 import { useEffect, useState, useRef } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import useSafeAsyncAction from '../../hooks/useSafeAsyncAction';
+
 import ContactsService from '../../services/ContactsService';
 import toast from '../../utils/toast';
 
 export default function useEditContact() {
   const [contactName, setContactName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+
   const contactFormRef = useRef(null);
   const params = useParams();
   const history = useHistory();
+  const safeAsyncAction = useSafeAsyncAction();
 
   async function handleSubmit(contact) {
     try {
@@ -36,20 +40,21 @@ export default function useEditContact() {
       try {
         const contactData = await ContactsService.getContactById(params.id, controller.signal);
 
-        contactFormRef.current.setFieldsValue(contactData);
-
-        setIsLoading(false);
-
-        setContactName(contactData.name);
+        safeAsyncAction(() => {
+          contactFormRef.current.setFieldsValue(contactData);
+          setIsLoading(false);
+          setContactName(contactData.name);
+        });
       } catch (error) {
         if (error instanceof DOMException && error.name === 'AbortError') {
           return;
         }
-
-        history.push('/');
-        toast({
-          type: 'danger',
-          text: 'Contato não encontrado!',
+        safeAsyncAction(() => {
+          history.push('/');
+          toast({
+            type: 'danger',
+            text: 'Contato não encontrado!',
+          });
         });
       }
     }
@@ -58,7 +63,7 @@ export default function useEditContact() {
     return () => {
       controller.abort();
     };
-  }, [history, params]);
+  }, [history, params, safeAsyncAction]);
 
   return {
     isLoading,

@@ -55,7 +55,7 @@ export default function useContactForm(onSubmit, ref) {
     return () => {
       controller.abort();
     };
-  }, []);
+  }, [setCategories, setLoadingCategories]);
 
   function handleEmailChange(event) {
     setEmail(event.target.value);
