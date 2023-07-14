@@ -30,6 +30,8 @@ const ContactForm = forwardRef(({ buttonLabel, onSubmit }, ref) => {
     categories,
     isFormValid,
   } = useContactForm(onSubmit, ref);
+
+  console.log('Renderizou');
   return (
     <Form onSubmit={handleSubmit} noValidate>
       <FormGroup error={getErrorMessageByFieldName('name')}>

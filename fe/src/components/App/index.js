@@ -6,7 +6,7 @@ import defaultTheme from '../../assets/styles/themes/default';
 import ToastContainer from '../Toast/ToastContainer';
 import { Container } from './styles';
 import Header from '../Header';
-import Routes from '../../Routes';
+import Routes from '../../Router';
 
 function App() {
   return (

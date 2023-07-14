@@ -4,7 +4,7 @@ module.exports = (request,response,next) =>{
     "http://localhost:3000",
   ]
 
-  const origin = response.header('Origin')
+  const origin = request.header('Origin')
   const allow = allowedOrigins.includes(origin)
 
   if (allow){
