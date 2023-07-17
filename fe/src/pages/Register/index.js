@@ -5,6 +5,7 @@ import { Card, Container } from './styles';
 import AccountsService from '../../services/AccountsService';
 import useErrors from '../../hooks/useErrors';
 import FormGroup from '../../components/FormGroup';
+import toast from '../../utils/toast';
 
 export default function Register() {
   const [email, setEmail] = useState('');
@@ -38,7 +39,22 @@ export default function Register() {
       password,
     };
 
-    await AccountsService.createAccount(body);
+    try {
+      await AccountsService.createAccount(body);
+      toast({
+        type: 'sucess',
+        text: 'Nova conta cadastrada com sucesso!',
+        duration: 3000,
+      });
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+    } catch {
+      toast({
+        type: 'danger',
+        text: 'E-mail já cadastrado!',
+      });
+    }
   }
 
   useEffect(() => {

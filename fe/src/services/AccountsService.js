@@ -8,7 +8,12 @@ class AccountsService {
 
   createAccount(account) {
     const body = AccountMapper.toPersistence(account);
-    return this.httpClient.post('/account', { body });
+    return this.httpClient.post('/registerUser', { body });
+  }
+
+  loginAccount(account) {
+    const body = AccountMapper.toPersistence(account);
+    return this.httpClient.post('/signUp', { body });
   }
 }
 export default new AccountsService();
