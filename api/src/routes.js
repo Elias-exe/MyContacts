@@ -20,6 +20,8 @@ router.post('/categories', CategoryController.store);
 // List Account
 router.get('/account', AccountController.index);
 //Create Account
-router.post('/account', AccountController.store);
+router.post('/registerUser', AccountController.registerUser);
+// Login Account
+router.post('/signUp', AccountController.signUp)
 
 module.exports = router;

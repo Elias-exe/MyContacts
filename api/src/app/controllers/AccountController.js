@@ -7,7 +7,7 @@ class AccountController {
     return response.status(201).json(accounts);
   }
 
-  async store(request, response) {
+  async registerUser(request, response) {
     const { email, password } = request.body;
 
     if (!email){
@@ -21,7 +21,7 @@ class AccountController {
     const emailExists = await AccountRepository.findByEmail({ email });
 
     if (emailExists) {
-      return response.status(404).json({error: "E-mail already by taken!"});
+      return response.status(409).json({error: "E-mail already by taken!"});
     }
 
     const saltRounds = 10;
@@ -36,8 +36,38 @@ class AccountController {
         password: hash
       })
   });
-
     return response.status(201).json("Accont created");
+  }
+
+  async signUp(request,response){
+    const {email,password} = request.body;
+
+    if(!email){
+      response.status(404).json({error:"E-mail is required!"})
+    }
+
+    if (!password){
+      response.status(404).json({error: "Password is required!"})
+    }
+
+    const account = await AccountRepository.findByEmail({email});
+
+    if (!account){
+      response.status(404).json({error: "Account not registred!"})
+    }
+
+    bcrypt.compare(password, account.password, (err, result) => {
+        if (err) {
+          console.error('Erro ao comparar as senhas:', err);
+          return;
+        }
+
+        if (result) {
+          return response.status(202).send();
+        } else {
+          return response.status(400).send('Dados inválidos!');
+        }
+      })
   }
 }
 
