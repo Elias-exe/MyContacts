@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { Card, Container } from './styles';
@@ -6,12 +7,16 @@ import AccountsService from '../../services/AccountsService';
 import useErrors from '../../hooks/useErrors';
 import FormGroup from '../../components/FormGroup';
 import toast from '../../utils/toast';
+import useSafeAsyncAction from '../../hooks/useSafeAsyncAction';
 
 export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [submiting, setSubmiting] = useState(false);
+
+  const navigate = useNavigate();
+  const safeAsyncAction = useSafeAsyncAction();
 
   const {
     errors,
@@ -41,14 +46,21 @@ export default function Register() {
 
     try {
       await AccountsService.createAccount(body);
-      toast({
-        type: 'sucess',
-        text: 'Nova conta cadastrada com sucesso!',
-        duration: 3000,
+      // toast({
+      //   type: 'sucess',
+      //   text: '',
+      //   duration: 3000,
+      // });
+      // setEmail('');
+      // setPassword('');
+      // setConfirmPassword('');
+      safeAsyncAction(() => {
+        navigate('/login', { replace: true });
+        toast({
+          type: 'sucess',
+          text: 'Nova conta cadastrada com sucesso!',
+        });
       });
-      setEmail('');
-      setPassword('');
-      setConfirmPassword('');
     } catch {
       toast({
         type: 'danger',
