@@ -4,7 +4,8 @@ const isValidUUID = require('../utils/isValidUUID');
 class ContactController {
   async index(request, response) {
     const { orderBy } = request.query;
-    const contacts = await ContactsRepository.findAll(orderBy);
+    const { createdBy } = request.body;
+    const contacts = await ContactsRepository.findAll(orderBy, createdBy);
 
     response.setHeader('Access-Control-Allow-Origin', '*')
     response.json(contacts);
@@ -28,7 +29,7 @@ class ContactController {
 
   async store(request, response) {
     const {
-      name, email, phone, category_id,
+      name, email, phone, category_id, created_by_email
     } = request.body;
 
     if(category_id && !isValidUUID(category_id)){
@@ -39,7 +40,11 @@ class ContactController {
       return response.status(400).json({ error: 'Name is required' });
     }
 
-    const contactExists = await ContactsRepository.findByEmail(email);
+    if (!created_by_email) {
+      return response.status(400).json({ error: 'createdBy is required' });
+    }
+
+    const contactExists = await ContactsRepository.findByEmail(email, created_by_email);
 
     if(email){
       if (contactExists) {
@@ -52,6 +57,7 @@ class ContactController {
       email: email || null,
       phone,
       category_id: category_id || null,
+      created_by_email
     });
 
     response.status(201).json(contact);

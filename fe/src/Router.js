@@ -5,16 +5,20 @@ import Categories from './pages/Categories';
 import EditContact from './pages/EditContact';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import ProtectedRoute from './utils/ProtectedRoute';
 
 export default function Router() {
   return (
     <Routes>
       <Route path="/" element={<Register />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/home" element={<Home />} />
-      <Route path="/new" element={<NewContact />} />
-      <Route path="/newCategory" element={<Categories />} />
-      <Route path="/edit/:id" element={<EditContact />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/home" element={<Home />} />
+        <Route path="/new" element={<NewContact />} />
+        <Route path="/newCategory" element={<Categories />} />
+        <Route path="/edit/:id" element={<EditContact />} />
+      </Route>
     </Routes>
+
   );
 }

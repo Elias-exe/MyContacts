@@ -5,6 +5,7 @@ class ContactMapper {
       email: domainContact.email,
       phone: domainContact.phone,
       category_id: domainContact.categoryId,
+      created_by_email: domainContact.createdByEmail,
     };
   }
 
@@ -14,6 +15,7 @@ class ContactMapper {
       name: persistenceContact.name,
       email: persistenceContact.email,
       phone: persistenceContact.phone,
+      createdByEmail: persistenceContact.created_by_email,
       category: {
         id: persistenceContact.category_id,
         name: persistenceContact.category_name,

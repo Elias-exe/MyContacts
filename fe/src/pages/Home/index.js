@@ -53,7 +53,6 @@ export default function Home() {
         qtyFilteredContacts={filteredContacts.length}
         hasError={hasError}
       />
-
       {hasError && <Error onTryAgain={handleTryAgain} />}
       {isEmptyList && <EmptyList />}
       {isSearchEmpty && <SearchNotFound searchTerm={searchTerm} />}

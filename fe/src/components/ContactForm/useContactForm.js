@@ -2,6 +2,7 @@ import {
   useState, useEffect, useImperativeHandle,
 } from 'react';
 
+import jwtDecode from 'jwt-decode';
 import isEmailValid from '../../utils/isEmailValid';
 import useErrors from '../../hooks/useErrors';
 import formatPhone from '../../utils/formatPhone';
@@ -17,6 +18,7 @@ export default function useContactForm(onSubmit, ref) {
   const [categories, setCategories] = useSafeAsyncState([]);
   const [isLoadingCategories, setLoadingCategories] = useSafeAsyncState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [userData, setUserData] = useState();
 
   const {
     errors,
@@ -57,6 +59,14 @@ export default function useContactForm(onSubmit, ref) {
     };
   }, [setCategories, setLoadingCategories]);
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setUserData(decodedToken);
+    }
+  }, []);
+
   function handleEmailChange(event) {
     setEmail(event.target.value);
 
@@ -89,7 +99,11 @@ export default function useContactForm(onSubmit, ref) {
     setIsSubmitting(true);
 
     onSubmit({
-      name, email, phone, categoryId,
+      name,
+      email,
+      phone,
+      categoryId,
+      createdByEmail: userData?.email,
     }).finally(() => {
       setIsSubmitting(false);
     });

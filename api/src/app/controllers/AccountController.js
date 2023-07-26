@@ -1,3 +1,5 @@
+const router = require("../../routes");
+const jwt = require("jsonwebtoken");
 const AccountRepository = require("../repositories/AccountRepository");
 const bcrypt = require ("bcrypt");
 
@@ -41,6 +43,7 @@ class AccountController {
 
   async signUp(request,response){
     const {email,password} = request.body;
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
 
     if(!email){
       response.status(404).json({error:"E-mail is required!"})
@@ -53,7 +56,7 @@ class AccountController {
     const account = await AccountRepository.findByEmail({email});
 
     if (!account){
-      response.status(404).json({error: "Account not registred!"})
+      response.status(404).json({error: "Conta não registrada!"})
     }
 
     bcrypt.compare(password, account.password, (err, result) => {
@@ -63,7 +66,8 @@ class AccountController {
         }
 
         if (result) {
-          return response.status(202).send();
+          const token = jwt.sign(account, jwtSecretKey, {expiresIn:'15min'})
+          return response.status(202).json({account, token});
         } else {
           return response.status(400).send('Dados inválidos!');
         }

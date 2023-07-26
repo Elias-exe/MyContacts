@@ -1,5 +1,6 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { Card, Container } from './styles';
@@ -8,6 +9,7 @@ import useErrors from '../../hooks/useErrors';
 import FormGroup from '../../components/FormGroup';
 import toast from '../../utils/toast';
 import useSafeAsyncAction from '../../hooks/useSafeAsyncAction';
+import isEmailValid from '../../utils/isEmailValid';
 
 export default function Register() {
   const [email, setEmail] = useState('');
@@ -27,10 +29,26 @@ export default function Register() {
 
   function handleChangeEmail(event) {
     setEmail(event.target.value);
+
+    if (!event.target.value || !isEmailValid(event.target.value)) {
+      setError(
+        { field: 'email', message: 'Email inválido.' },
+      );
+    } else {
+      removeError('email');
+    }
   }
 
   function handleChangePassword(event) {
     setPassword(event.target.value);
+
+    if (!event.target.value) {
+      setError(
+        { field: 'password', message: 'Senha inválida!' },
+      );
+    } else {
+      removeError('password');
+    }
   }
 
   const handleChangeConfirmPassword = useCallback((event) => {
@@ -46,14 +64,6 @@ export default function Register() {
 
     try {
       await AccountsService.createAccount(body);
-      // toast({
-      //   type: 'sucess',
-      //   text: '',
-      //   duration: 3000,
-      // });
-      // setEmail('');
-      // setPassword('');
-      // setConfirmPassword('');
       safeAsyncAction(() => {
         navigate('/login', { replace: true });
         toast({
@@ -61,11 +71,14 @@ export default function Register() {
           text: 'Nova conta cadastrada com sucesso!',
         });
       });
-    } catch {
+    } catch (error) {
       toast({
         type: 'danger',
-        text: 'E-mail já cadastrado!',
+        text: error.message,
       });
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
     }
   }
 
@@ -84,39 +97,45 @@ export default function Register() {
 
   return (
     <Container>
-      <Card>
-        <h2>Registrar nova conta</h2>
-        <FormGroup error={getErrorMessageByFieldName('email')}>
-          <Input
-            placeholder="Email"
-            value={email}
-            onChange={handleChangeEmail}
-          />
-        </FormGroup>
-        <FormGroup error={getErrorMessageByFieldName('password')}>
-          <Input
-            placeholder="Password"
-            value={password}
-            onChange={handleChangePassword}
-            type="password"
-          />
-        </FormGroup>
-        <FormGroup error={getErrorMessageByFieldName('confirmPassword')}>
-          <Input
-            placeholder="Confirm password"
-            value={confirmPassword}
-            onChange={handleChangeConfirmPassword}
-            type="password"
-          />
-        </FormGroup>
-        <Button
-          type="submit"
-          onClick={handleSubmit}
-          disabled={errors.length !== 0 || !submiting}
-        >
-          Create
-        </Button>
-      </Card>
+      <form>
+        <Card>
+          <h2>Registrar nova conta</h2>
+          <span>Já possui uma conta? <Link to="/login">Clique aqui!</Link></span>
+          <FormGroup error={getErrorMessageByFieldName('email')}>
+            <Input
+              placeholder="Email"
+              error={getErrorMessageByFieldName('email')}
+              value={email}
+              onChange={handleChangeEmail}
+            />
+          </FormGroup>
+          <FormGroup error={getErrorMessageByFieldName('password')}>
+            <Input
+              placeholder="Password"
+              error={getErrorMessageByFieldName('password')}
+              value={password}
+              onChange={handleChangePassword}
+              type="password"
+            />
+          </FormGroup>
+          <FormGroup error={getErrorMessageByFieldName('confirmPassword')}>
+            <Input
+              placeholder="Confirm password"
+              error={getErrorMessageByFieldName('confirmPassword')}
+              value={confirmPassword}
+              onChange={handleChangeConfirmPassword}
+              type="password"
+            />
+          </FormGroup>
+          <Button
+            type="submit"
+            onClick={handleSubmit}
+            disabled={errors.length !== 0 || !submiting}
+          >
+            Create
+          </Button>
+        </Card>
+      </form>
     </Container>
   );
 }

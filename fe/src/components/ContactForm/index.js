@@ -5,7 +5,6 @@ import {
 } from 'react';
 
 import { Form } from './styles';
-
 import FormGroup from '../FormGroup';
 import Input from '../Input';
 import Select from '../Select';
@@ -31,7 +30,6 @@ const ContactForm = forwardRef(({ buttonLabel, onSubmit }, ref) => {
     isFormValid,
   } = useContactForm(onSubmit, ref);
 
-  console.log('Renderizou');
   return (
     <Form onSubmit={handleSubmit} noValidate>
       <FormGroup error={getErrorMessageByFieldName('name')}>

@@ -2,6 +2,7 @@ import {
   useEffect, useState, useCallback, useMemo, useDeferredValue,
 } from 'react';
 
+import jwtDecode from 'jwt-decode';
 import toast from '../../utils/toast';
 
 import ContactsService from '../../services/ContactsService';
@@ -15,6 +16,7 @@ export default function useHome() {
   const [isDeleteModalIsVisible, setIsDeleteModalIsVisible] = useState(false);
   const [contactBeingDelete, setContactBeingDelete] = useState(null);
   const [isLoadingDeleteContact, setIsLoadingDeleteContact] = useState(false);
+  const [userData, setUserData] = useState();
 
   const deferredSearchTerm = useDeferredValue(searchTerm);
 
@@ -26,7 +28,14 @@ export default function useHome() {
 
   const loadContacts = useCallback(async (signal) => {
     try {
-      const contactsList = await ContactsService.listContacts(orderBy, signal);
+      const body = {
+        createdBy: userData?.email,
+      };
+      const contactsList = await ContactsService.listContacts(
+        orderBy,
+        signal,
+        body,
+      );
       setHasError(false);
       setContacts(contactsList);
     } catch (error) {
@@ -38,17 +47,25 @@ export default function useHome() {
     } finally {
       setIsLoading(false);
     }
-  }, [orderBy]);
+  }, [orderBy, userData?.email]);
 
   useEffect(() => {
     const controller = new AbortController();
 
-    loadContacts(controller.signal);
+    loadContacts();
 
     return () => {
       controller.abort();
     };
   }, [loadContacts]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setUserData(decodedToken);
+    }
+  }, []);
 
   const handleToggleOrderBy = useCallback(() => {
     setOrderBy(

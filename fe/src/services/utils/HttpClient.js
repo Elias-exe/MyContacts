@@ -18,6 +18,7 @@ class HttpClient {
       method: 'POST',
       body: options?.body,
       headers: options?.headers,
+      signal: options?.signal,
     });
   }
 
@@ -42,7 +43,6 @@ class HttpClient {
     if (options.body) {
       headers.append('Content-Type', 'application/json');
     }
-
     if (options.headers) {
       Object.entries(options.headers).forEach(([name, value]) => {
         headers.append(name, value);

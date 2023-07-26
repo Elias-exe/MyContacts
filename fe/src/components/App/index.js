@@ -7,19 +7,22 @@ import ToastContainer from '../Toast/ToastContainer';
 import { Container } from './styles';
 import Header from '../Header';
 import Routes from '../../Router';
+import { AuthProvider } from '../../Context/AuthContext';
 
 function App() {
   return (
-    <BrowserRouter>
-      <ThemeProvider theme={defaultTheme}>
-        <GlobalStyles />
-        <ToastContainer />
-        <Container>
-          <Header />
-          <Routes />
-        </Container>
-      </ThemeProvider>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <ThemeProvider theme={defaultTheme}>
+          <GlobalStyles />
+          <ToastContainer />
+          <Container>
+            <Header />
+            <Routes />
+          </Container>
+        </ThemeProvider>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

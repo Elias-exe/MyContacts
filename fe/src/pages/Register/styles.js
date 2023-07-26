@@ -13,7 +13,19 @@ export const Card = styled.div`
   align-items: center;
   flex-direction: column;
   h2{
-    margin-bottom: 16px;
+    margin-bottom: 4px;
+  }
+  span {
+    margin-bottom: 8px;
+  }
+  a{
+    text-decoration: none;
+    color: ${({ theme }) => theme.colors.primary.main};
+    transition: all 0.2s ease-in;
+
+  &:hover{
+    color : ${({ theme }) => theme.colors.primary.light};
+  }
   }
   button {
     margin-top: 24px;

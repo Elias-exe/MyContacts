@@ -6,7 +6,7 @@ import { Container } from './styles';
 export default function PageHeader({ title }) {
   return (
     <Container>
-      <Link to="/">
+      <Link to="/home">
         <img src={arrow} alt="Back" />
         <span>Voltar</span>
       </Link>

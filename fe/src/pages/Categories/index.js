@@ -13,7 +13,7 @@ export default function Categories() {
   return (
     <Container>
       <Header>
-        <Link to="/">Voltar</Link>
+        <Link to="/home">Voltar</Link>
       </Header>
 
       <h1>Criar nova categoria</h1>

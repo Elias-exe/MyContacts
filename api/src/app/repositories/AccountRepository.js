@@ -13,6 +13,13 @@ class AccountRepository{
     return row;
   }
 
+  async findById({id}){
+    const [row] = await db.query(
+      `SELECT * FROM accounts WHERE id = $1`,
+      [id]);
+    return row;
+  }
+
   async createAccount({email,password}){
     const [newAccount] = await db.query(`
       INSERT INTO accounts (email,password)

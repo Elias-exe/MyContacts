@@ -1,13 +1,14 @@
 const db = require('../../database');
 
 class ContactsRepository {
-  async findAll(orderBy = 'ASC') {
+  async findAll(orderBy = 'ASC', createdBy) {
     const direction = orderBy.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
     const rows = await db.query(`
     SELECT contacts.*, categories.name AS category_name
     FROM contacts
     LEFT JOIN categories ON categories.id = contacts.category_id
-    ORDER BY contacts.name ${direction}`);
+    WHERE created_by_email = $1
+    ORDER BY contacts.name ${direction}`, [createdBy]);
     return rows;
   }
 
@@ -20,19 +21,22 @@ class ContactsRepository {
     return row;
   }
 
-  async findByEmail(email) {
-    const [row] = await db.query('SELECT * FROM contacts WHERE email = $1', [email]);
+  async findByEmail(email, created_by_email) {
+    const [row] = await db.query(`
+    SELECT *
+    FROM contacts
+    WHERE email = $1 AND created_by_email = $2`, [email, created_by_email]);
     return row;
   }
 
   async create({
-    name, email, phone, category_id,
+    name, email, phone, category_id, created_by_email
   }) {
     const [row] = await db.query(`
-    INSERT INTO contacts(name,email,phone, category_id)
-    VALUES($1, $2, $3, $4)
+    INSERT INTO contacts(name,email,phone, category_id,created_by_email)
+    VALUES($1, $2, $3, $4, $5)
     RETURNING *
-    `, [name, email, phone, category_id]);
+    `, [name, email, phone, category_id, created_by_email]);
 
     return row;
   }

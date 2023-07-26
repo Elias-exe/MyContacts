@@ -1,22 +1,63 @@
-import { useState } from 'react';
+/* eslint-disable react/jsx-one-expression-per-line */
+import { useContext, useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Container } from './styles';
 
 import FormGroup from '../../components/FormGroup';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import AccountsService from '../../services/AccountsService';
+import { Context } from '../../Context/AuthContext';
+import useSafeAsyncAction from '../../hooks/useSafeAsyncAction';
+import useErrors from '../../hooks/useErrors';
+import isEmailValid from '../../utils/isEmailValid';
+import toast from '../../utils/toast';
 
 export default function Login() {
+  const { authenticated, handleLogin } = useContext(Context);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+  const safeAsyncAction = useSafeAsyncAction();
 
-  function handleEmail(event) {
+  const {
+    errors,
+    getErrorMessageByFieldName,
+    removeError,
+    setError,
+  } = useErrors();
+
+  function handleChangeEmail(event) {
     setEmail(event.target.value);
+
+    if (!event.target.value || !isEmailValid(event.target.value)) {
+      setError(
+        { field: 'email', message: 'Email inválido.' },
+      );
+    } else {
+      removeError('email');
+    }
   }
 
-  function handlePassword(event) {
+  function handleChangePassword(event) {
     setPassword(event.target.value);
+
+    if (!event.target.value) {
+      setError(
+        { field: 'password', message: 'Senha inválida!' },
+      );
+    } else {
+      removeError('password');
+    }
   }
+
+  useEffect(() => {
+    if (authenticated) {
+      safeAsyncAction(() => {
+        navigate('/home', { replace: true });
+      });
+    }
+  }, [authenticated]);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -25,40 +66,53 @@ export default function Login() {
       email,
       password,
     };
-
     try {
-      await AccountsService.loginAccount(body);
-    } catch {
-      console.log('error');
+      const datas = await AccountsService.loginAccount(body);
+      await handleLogin(datas.token);
+    } catch (error) {
+      toast(
+        {
+          type: 'danger',
+          text: error.message,
+        },
+      );
+      setEmail('');
+      setPassword('');
     }
   }
 
   return (
     <Container>
       <h2>Entre em sua conta!</h2>
-      <FormGroup>
-        <Input
-          placeholder="Email"
-          type="email"
-          value={email}
-          onChange={handleEmail}
-        />
-      </FormGroup>
-      <FormGroup>
-        <Input
-          placeholder="Password"
-          type="password"
-          value={password}
-          onChange={handlePassword}
-        />
-      </FormGroup>
-      <Button
-        type="submit"
-        disabled={!email || !password}
-        onClick={handleSubmit}
-      >
-        Entrar
-      </Button>
+      <span>Não possui uma conta? Registre-se <Link to="/">clicando aqui!</Link>
+      </span>
+      <form>
+        <FormGroup error={getErrorMessageByFieldName('email')}>
+          <Input
+            placeholder="Email"
+            error={getErrorMessageByFieldName('email')}
+            type="email"
+            value={email}
+            onChange={handleChangeEmail}
+          />
+        </FormGroup>
+        <FormGroup error={getErrorMessageByFieldName('password')}>
+          <Input
+            placeholder="Password"
+            error={getErrorMessageByFieldName('password')}
+            type="password"
+            value={password}
+            onChange={handleChangePassword}
+          />
+        </FormGroup>
+        <Button
+          type="submit"
+          disabled={errors.length > 0 || !email || !password}
+          onClick={handleSubmit}
+        >
+          Entrar
+        </Button>
+      </form>
     </Container>
   );
 }

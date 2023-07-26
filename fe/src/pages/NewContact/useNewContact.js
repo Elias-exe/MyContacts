@@ -10,13 +10,22 @@ export default function useNewContact() {
         text: 'Sucesso ao cadastrar o contato',
         duration: 3000,
       });
-    } catch {
-      toast(
-        {
-          type: 'danger',
-          text: 'Ocorreu um erro ao cadastrar o contato',
-        },
-      );
+    } catch (error) {
+      if (error.message === 'This e-mail is already been taken') {
+        toast(
+          {
+            type: 'danger',
+            text: 'Contato esse e-mail já cadastrado!',
+          },
+        );
+      } else {
+        toast(
+          {
+            type: 'danger',
+            text: 'Ocorreu um erro ao cadastrar o contato',
+          },
+        );
+      }
     }
   }
 
