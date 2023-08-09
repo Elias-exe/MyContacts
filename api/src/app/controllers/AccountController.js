@@ -1,7 +1,7 @@
 const router = require("../../routes");
 const jwt = require("jsonwebtoken");
 const AccountRepository = require("../repositories/AccountRepository");
-const bcrypt = require ("bcrypt");
+const bcrypt = require ("bcryptjs");
 
 class AccountController {
   async index(request,response){

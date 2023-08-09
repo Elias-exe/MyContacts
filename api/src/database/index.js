@@ -1,13 +1,8 @@
 const { Client } = require('pg');
 
 const client = new Client({
-  host: 'localhost',
-  port: 32768,
-  user: 'postgres',
-  password: 'postgrespw',
-  database: 'mycontacts',
+  connectionString: process.env.DATABASE_URL
 });
-
 client.connect();
 
 exports.query = async (query, values) => {

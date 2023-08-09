@@ -1,0 +1,45 @@
+version: "3.8"  # Versão do formato do arquivo docker-compose
+
+services:
+  # Serviço do Front-End
+  frontend:
+    build:
+      context: ./fe  # Caminho para o diretório do Front-End
+    ports:
+      - "3000:3000"  # Mapeamento da porta do container (host:container)
+    networks:
+      - app-network  # Nome da rede Docker a ser usada
+
+  # Serviço do Back-End
+  backend:
+    build:
+      context: ./api  # Caminho para o diretório do Back-End
+    ports:
+      - "3001:3001"  # Mapeamento da porta do container (host:container)
+    networks:
+      - app-network  # Nome da rede Docker a ser usada
+    depends_on:
+      - db  # Dependência do serviço do banco de dados
+
+  # Serviço do banco de dados PostgreSQL
+  db:
+    image: postgres:latest  # Imagem oficial do PostgreSQL a ser usada
+    environment:
+      POSTGRES_USER: postgres  # Nome de usuário do banco de dados
+      POSTGRES_PASSWORD: postgrespw  # Senha do banco de dados
+      POSTGRES_DB: mycontacts  # Nome do banco de dados
+    ports:
+      - "32768:5432"  # Mapeamento da porta do container (host:container)
+    volumes:
+      - pgdata:/var/lib/postgresql/data  # Volume para persistência dos dados
+    networks:
+      - app-network  # Nome da rede Docker a ser usada
+
+# Definindo a rede Docker para os serviços
+networks:
+  app-network:
+    driver: bridge
+
+# Definindo o volume para persistência dos dados do PostgreSQL
+volumes:
+  pgdata:
