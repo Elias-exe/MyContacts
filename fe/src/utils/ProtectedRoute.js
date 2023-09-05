@@ -1,18 +1,25 @@
-import { useContext, useEffect } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
-import { Context } from '../Context/AuthContext';
+// import { useContext, useEffect } from 'react';
+import PropTypes from 'prop-types';
+// import { Outlet, useNavigate } from 'react-router-dom';
+import Router from '../Router';
+// import { Context } from '../Context/AuthContext';
+import AccountsService from '../services/AccountsService';
 
-export default function ProtectedRoute() {
-  const { authenticated } = useContext(Context);
-  const navigate = useNavigate();
+export default function ProtectedRoute({ children }) {
+  // const { authenticated } = useContext(Context);
+  // const navigate = useNavigate();
+  // console.log(authenticated);
+  // useEffect(() => {
+  //   if (!authenticated) {
+  //     navigate('/login');
+  //   }
+  // }, [authenticated, navigate]);
 
-  useEffect(() => {
-    if (!authenticated) {
-      navigate('/login');
-    }
-  }, [authenticated]);
-
-  return (
-    <Outlet />
-  );
+  const Authenticated = AccountsService.loginAccount();
+  console.log('usuarioAutenticado', Authenticated);
+  return Authenticated ? children : <Router />;
 }
+
+ProtectedRoute.propTypes = {
+  children: PropTypes.node.isRequired,
+};

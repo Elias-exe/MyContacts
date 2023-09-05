@@ -53,11 +53,9 @@ export default function Login() {
 
   useEffect(() => {
     if (authenticated) {
-      safeAsyncAction(() => {
-        navigate('/home', { replace: true });
-      });
+      navigate('/home', { replace: true });
     }
-  }, [authenticated]);
+  }, [authenticated, navigate, safeAsyncAction]);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -73,7 +71,7 @@ export default function Login() {
       toast(
         {
           type: 'danger',
-          text: error.message,
+          text: 'Dados inválidos',
         },
       );
       setEmail('');

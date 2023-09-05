@@ -3,7 +3,7 @@ import CategoryMapper from './mappers/CategoryMapper';
 
 class CategoriesService {
   constructor() {
-    this.httpClient = new HttpClient('http://localhost:3001');
+    this.httpClient = new HttpClient('https://mycontacts-api-4mqf.onrender.com');
   }
 
   async listCategories(signal) {

@@ -59,13 +59,20 @@ export default function useHome() {
     };
   }, [loadContacts]);
 
+  let token = null;
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      setUserData(decodedToken);
+    try {
+      token = localStorage.getItem('token');
+      if (token) {
+        const decodedToken = jwtDecode(token);
+        setUserData(decodedToken);
+      }
+    } catch (error) {
+      console.error('Erro ao processar o token:', error);
+      // Lide com o erro de acordo com suas necessidades, por exemplo,
+      // limpando o localStorage ou mostrando uma mensagem de erro.
     }
-  }, []);
+  }, [token]); // Dependência token, o efeito será executado sempre que 'token' mudar
 
   const handleToggleOrderBy = useCallback(() => {
     setOrderBy(

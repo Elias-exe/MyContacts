@@ -2,7 +2,7 @@ import HttpClient from './utils/HttpClient';
 
 class TokenService {
   constructor() {
-    this.httpClient = new HttpClient('http://localhost:3001');
+    this.httpClient = new HttpClient('https://mycontacts-api-4mqf.onrender.com');
   }
 
   generateToken() {

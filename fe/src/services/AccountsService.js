@@ -3,17 +3,19 @@ import HttpClient from './utils/HttpClient';
 
 class AccountsService {
   constructor() {
-    this.httpClient = new HttpClient('http://localhost:3001');
+    this.httpClient = new HttpClient('https://mycontacts-api-4mqf.onrender.com');
   }
 
-  createAccount(account) {
+  async createAccount(account) {
     const body = AccountMapper.toPersistence(account);
-    return this.httpClient.post('/registerUser', { body });
+    const response = await this.httpClient.post('/registerUser', { body });
+    return response;
   }
 
-  loginAccount(account) {
+  async loginAccount(account) {
     const body = AccountMapper.toPersistence(account);
-    return this.httpClient.post('/signUp', { body });
+    const response = await this.httpClient.post('/signUp', { body });
+    return response;
   }
 }
 export default new AccountsService();
