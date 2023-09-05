@@ -50,29 +50,33 @@ export default function useHome() {
   }, [orderBy, userData?.email]);
 
   useEffect(() => {
-    const controller = new AbortController();
-
-    loadContacts();
-
-    return () => {
-      controller.abort();
-    };
-  }, [loadContacts]);
-
-  let token = null;
-  useEffect(() => {
     try {
-      token = localStorage.getItem('token');
+      const token = localStorage.getItem('token');
       if (token) {
         const decodedToken = jwtDecode(token);
-        setUserData(decodedToken);
+
+        if (decodedToken) {
+          setUserData(decodedToken);
+        }
+
+        loadContacts();
       }
     } catch (error) {
       console.error('Erro ao processar o token:', error);
-      // Lide com o erro de acordo com suas necessidades, por exemplo,
-      // limpando o localStorage ou mostrando uma mensagem de erro.
+    } finally {
+      setIsLoading(false);
     }
-  }, [token]); // Dependência token, o efeito será executado sempre que 'token' mudar
+  }, [loadContacts]);
+
+  // useEffect(() => {
+  //   const controller = new AbortController();
+
+  //   loadContacts();
+
+  //   return () => {
+  //     controller.abort();
+  //   };
+  // }, [loadContacts]);
 
   const handleToggleOrderBy = useCallback(() => {
     setOrderBy(
