@@ -25,6 +25,7 @@ export default function Header({ hasError, qtyContacts, qtyFilteredContacts }) {
       </strong>
       )}
       <Link to="/new">Novo contato</Link>
+      <Link to="/newCategory">Nova Categoria</Link>
     </Container>
   );
 }

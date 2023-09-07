@@ -17,6 +17,7 @@ export default function useHome() {
   const [contactBeingDelete, setContactBeingDelete] = useState(null);
   const [isLoadingDeleteContact, setIsLoadingDeleteContact] = useState(false);
   const [userData, setUserData] = useState();
+  const [isTokenValidated, setIsTokenValidated] = useState(false);
 
   const deferredSearchTerm = useDeferredValue(searchTerm);
 
@@ -57,16 +58,25 @@ export default function useHome() {
 
         if (decodedToken) {
           setUserData(decodedToken);
+          setIsTokenValidated(true);
         }
-
-        loadContacts();
       }
     } catch (error) {
-      console.error('Erro ao processar o token:', error);
+      console.log('caiu aqui');
     } finally {
       setIsLoading(false);
     }
-  }, [loadContacts]);
+  }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    if (isTokenValidated) {
+      loadContacts(controller.signal);
+    }
+    return () => {
+      controller.abort();
+    };
+  }, [isTokenValidated, loadContacts]);
 
   // useEffect(() => {
   //   const controller = new AbortController();

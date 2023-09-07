@@ -17,6 +17,7 @@ export default function Login() {
   const { authenticated, handleLogin } = useContext(Context);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const safeAsyncAction = useSafeAsyncAction();
 
@@ -65,6 +66,7 @@ export default function Login() {
       password,
     };
     try {
+      setIsLoading(true);
       const datas = await AccountsService.loginAccount(body);
       await handleLogin(datas.token);
     } catch (error) {
@@ -76,13 +78,15 @@ export default function Login() {
       );
       setEmail('');
       setPassword('');
+    } finally {
+      setIsLoading(false);
     }
   }
 
   return (
     <Container>
       <h2>Entre em sua conta!</h2>
-      <span>Não possui uma conta? Registre-se <Link to="/">clicando aqui!</Link>
+      <span>Não possui uma conta? Registre-se <Link to="/register">clicando aqui!</Link>
       </span>
       <form>
         <FormGroup error={getErrorMessageByFieldName('email')}>
@@ -105,7 +109,7 @@ export default function Login() {
         </FormGroup>
         <Button
           type="submit"
-          disabled={errors.length > 0 || !email || !password}
+          disabled={(errors.length > 0 || !email || !password) || isLoading}
           onClick={handleSubmit}
         >
           Entrar

@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types';
 import { createContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import TokenService from '../services/TokenService';
 
 const Context = createContext();
-
 function AuthProvider({ children }) {
   const [authenticated, setAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
@@ -17,21 +18,26 @@ function AuthProvider({ children }) {
           Authorization: `${JSON.parse(token)}`,
         };
 
-        await TokenService.validateToken(headers);
-        setAuthenticated(true);
+        try {
+          await TokenService.validateToken(headers);
+          setAuthenticated(true);
+        } catch {
+          navigate('/');
+        }
       }
       setLoading(false);
     })();
-  }, []);
+  }, [navigate]);
 
   async function handleLogin(datas) {
-    localStorage.setItem('token', JSON.stringify(datas));
     try {
       const headers = {
         Authorization: `${datas}`,
       };
       await TokenService.validateToken(headers);
+      localStorage.setItem('token', JSON.stringify(datas));
       setAuthenticated(true);
+      navigate('/home');
     } catch (error) {
       console.log(error);
     }
@@ -40,6 +46,7 @@ function AuthProvider({ children }) {
   function handleLogout() {
     setAuthenticated(false);
     localStorage.removeItem('token');
+    navigate('/login');
   }
 
   return (
