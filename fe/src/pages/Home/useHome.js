@@ -45,8 +45,6 @@ export default function useHome() {
       }
       setHasError(true);
       setContacts([]);
-    } finally {
-      setIsLoading(false);
     }
   }, [orderBy, userData?.email]);
 
@@ -63,8 +61,6 @@ export default function useHome() {
       }
     } catch (error) {
       console.log('caiu aqui');
-    } finally {
-      setIsLoading(false);
     }
   }, []);
 
@@ -73,20 +69,11 @@ export default function useHome() {
     if (isTokenValidated) {
       loadContacts(controller.signal);
     }
+    setIsLoading(false);
     return () => {
       controller.abort();
     };
   }, [isTokenValidated, loadContacts]);
-
-  // useEffect(() => {
-  //   const controller = new AbortController();
-
-  //   loadContacts();
-
-  //   return () => {
-  //     controller.abort();
-  //   };
-  // }, [loadContacts]);
 
   const handleToggleOrderBy = useCallback(() => {
     setOrderBy(

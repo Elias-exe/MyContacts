@@ -1,3 +1,4 @@
+const AccountRepository = require('../repositories/AccountRepository');
 const CategoriesRepository = require('../repositories/CategoriesRepository');
 
 class CategoryController {
@@ -7,13 +8,23 @@ class CategoryController {
   }
 
   async store(request, response) {
-    const { name } = request.body;
+    const { name, createdBy } = request.body;
 
     if (!name) {
       return response.status(400).json({ error: 'Name is required' });
     }
 
-    const category = await CategoriesRepository.create({ name });
+    if(!createdBy){
+      return response.status(400).json({ error: 'CreatedBy is required' })
+    }
+
+    const email = await AccountRepository.findByEmail({ createdBy })
+
+    if(!email){
+      return response.status(400).json({ error: 'Email not found'})
+    }
+
+    const category = await CategoriesRepository.create({ name, createdBy });
 
     response.json(category);
   }

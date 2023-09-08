@@ -19,5 +19,7 @@ CREATE TABLE IF NOT EXISTS contacts (
 CREATE TABLE IF NOT EXISTS accounts (
   id UUID NOT NULL UNIQUE DEFAULT uuid_generate_v4(),
   email VARCHAR NOT NULL,
-  password VARCHAR NOT NULL
+  password VARCHAR NOT NULL,
+  category_id UUID,
+  FOREIGN KEY(category_id) REFERENCES categories(id)
 );

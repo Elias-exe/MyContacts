@@ -111,6 +111,7 @@ export default function Login() {
           type="submit"
           disabled={(errors.length > 0 || !email || !password) || isLoading}
           onClick={handleSubmit}
+          isLoading={isLoading}
         >
           Entrar
         </Button>
