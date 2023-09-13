@@ -7,7 +7,7 @@ class ContactsRepository {
     SELECT contacts.*, categories.name AS category_name
     FROM contacts
     LEFT JOIN categories ON categories.id = contacts.category_id
-    WHERE created_by_email = $1
+    WHERE contacts.created_by_email = $1
     ORDER BY contacts.name ${direction}`, [createdBy]);
     return rows;
   }
