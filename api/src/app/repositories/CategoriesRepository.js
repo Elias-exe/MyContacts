@@ -9,11 +9,11 @@ class CategoriesRepository {
     return rows;
   }
 
-  async create({ name, email }) {
+  async create({ name, created_by_email }) {
     const [row] = await db.query(`
     INSERT INTO categories (name, created_by_email)
     VALUES($1, $2)
-    RETURNING *`, [name, email]);
+    RETURNING *`, [name, created_by_email]);
     return row;
   }
 }

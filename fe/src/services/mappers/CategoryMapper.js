@@ -11,6 +11,7 @@ class CategoryMapper {
     return {
       name: categoryDomain.name,
       email: categoryDomain.email,
+      createdBy: categoryDomain.created_by_email,
     };
   }
 }

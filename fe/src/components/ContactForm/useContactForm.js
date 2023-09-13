@@ -61,7 +61,7 @@ export default function useContactForm(onSubmit, ref) {
     return () => {
       controller.abort();
     };
-  }, [setCategories, setLoadingCategories]);
+  }, [setCategories, setLoadingCategories, userData?.email]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
