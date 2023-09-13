@@ -8,19 +8,19 @@ class CategoryController {
   }
 
   async store(request, response) {
-    const { name, createdBy } = request.body;
+    const { name, email } = request.body;
 
     if (!name) {
       return response.status(400).json({ error: 'Name is required' });
     }
 
-    if(!createdBy){
+    if(!email){
       return response.status(400).json({ error: 'CreatedBy is required' })
     }
 
-    const email = await AccountRepository.findByEmail({ createdBy })
+    const createdBy = await AccountRepository.findByEmail({ email })
 
-    if(!email){
+    if(!createdBy){
       return response.status(400).json({ error: 'Email not found'})
     }
 

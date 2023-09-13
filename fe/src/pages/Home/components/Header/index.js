@@ -24,8 +24,10 @@ export default function Header({ hasError, qtyContacts, qtyFilteredContacts }) {
         {qtyFilteredContacts === 1 ? ' contato' : ' contatos'}
       </strong>
       )}
-      <Link to="/new">Novo contato</Link>
-      <Link to="/newCategory">Nova Categoria</Link>
+      <div className="buttonContainer">
+        <Link to="/new">Novo contato</Link>
+        <Link to="/newCategory">Nova Categoria</Link>
+      </div>
     </Container>
   );
 }

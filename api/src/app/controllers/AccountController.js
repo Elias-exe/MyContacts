@@ -52,7 +52,7 @@ class AccountController {
     if (!password){
       response.status(404).json({error: "Password is required!"})
     }
-
+    console.log(email)
     const account = await AccountRepository.findByEmail({email});
 
     if (!account){

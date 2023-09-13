@@ -28,4 +28,9 @@ padding-bottom: 16px;
       color:white;
     }
   }
+
+  .buttonContainer{
+    display: flex;
+    gap: 8px;
+  }
 `;

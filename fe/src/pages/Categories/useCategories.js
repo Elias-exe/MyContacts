@@ -22,11 +22,15 @@ export default function useCategories() {
     }
   }, []);
 
-  console.log(userData);
+  console.log(userData?.email);
 
   async function handleSubmit(category) {
+    const data = {
+      ...category,
+      CreatedBy: userData?.email,
+    };
     try {
-      await CategoriesService.createCategory(category);
+      await CategoriesService.createCategory(data);
       toast({
         type: 'sucess',
         text: 'Sucesso ao cadastrar a categoria',
@@ -49,5 +53,6 @@ export default function useCategories() {
     categoryName,
     handleCategoryName,
     handleSubmit,
+    userData,
   };
 }
