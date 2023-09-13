@@ -5,7 +5,7 @@ class CategoryController {
   async index(request, response) {
     const { created_by_email } = request.params;
 
-    const categories = await CategoriesRepository.findAll({ created_by_email });
+    const categories = await CategoriesRepository.findAll(created_by_email);
     return response.json(categories);
   }
 
