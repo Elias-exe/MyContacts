@@ -3,7 +3,9 @@ const CategoriesRepository = require('../repositories/CategoriesRepository');
 
 class CategoryController {
   async index(request, response) {
-    const categories = await CategoriesRepository.findAll();
+    const { email } = request.body;
+
+    const categories = await CategoriesRepository.findAll({ email });
     return response.json(categories);
   }
 
@@ -14,14 +16,14 @@ class CategoryController {
       return response.status(400).json({ error: 'Name is required' });
     }
 
-    if(!email){
+    if (!email) {
       return response.status(400).json({ error: 'CreatedBy is required' })
     }
 
     const createdBy = await AccountRepository.findByEmail({ email })
 
-    if(!createdBy){
-      return response.status(400).json({ error: 'Email not found'})
+    if (!createdBy) {
+      return response.status(400).json({ error: 'Email not found' })
     }
 
     const category = await CategoriesRepository.create({ name, createdBy });

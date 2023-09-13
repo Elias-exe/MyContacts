@@ -38,12 +38,16 @@ export default function useContactForm(onSubmit, ref) {
     },
   }), []);
 
+  console.log(userData);
+
   useEffect(() => {
     const controller = new AbortController();
 
     async function loadCategories() {
       try {
-        const categoriesList = await CategoriesService.listCategories(controller.signal);
+        const categoriesList = await CategoriesService.listCategories(
+          { signal: controller.signal, body: userData?.email },
+        );
         setCategories(categoriesList);
       } catch {
 

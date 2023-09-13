@@ -22,8 +22,6 @@ export default function useCategories() {
     }
   }, []);
 
-  console.log(userData?.email);
-
   async function handleSubmit(category) {
     const data = {
       ...category,

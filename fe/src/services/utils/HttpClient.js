@@ -8,6 +8,7 @@ class HttpClient {
   get(path, options) {
     return this.makeRequest(path, {
       method: 'GET',
+      body: options?.body,
       headers: options?.headers,
       signal: options?.signal,
     });
