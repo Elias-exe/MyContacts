@@ -26,7 +26,7 @@ class CategoryController {
       return response.status(400).json({ error: 'Email not found' })
     }
 
-    const category = await CategoriesRepository.create({ name, createdBy });
+    const category = await CategoriesRepository.create({ name, created_by_email });
 
     response.json(category);
   }
