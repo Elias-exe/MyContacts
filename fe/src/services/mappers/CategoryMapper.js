@@ -3,15 +3,15 @@ class CategoryMapper {
     return {
       id: categoryPersistence.id,
       name: categoryPersistence.name,
-      email: categoryPersistence.email,
+      createdBy: categoryPersistence.created_by_email,
     };
   }
 
   toPersistence(categoryDomain) {
+    console.log(categoryDomain);
     return {
       name: categoryDomain.name,
-      email: categoryDomain.email,
-      createdBy: categoryDomain.created_by_email,
+      created_by_email: categoryDomain.created_by_email,
     };
   }
 }

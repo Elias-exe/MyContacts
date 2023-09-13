@@ -38,19 +38,20 @@ export default function useContactForm(onSubmit, ref) {
     },
   }), []);
 
-  console.log(userData);
-
   useEffect(() => {
     const controller = new AbortController();
 
     async function loadCategories() {
       try {
+        // const data = {
+        //   createdBy: userData?.email,
+        // };
         const categoriesList = await CategoriesService.listCategories(
-          { signal: controller.signal, body: userData?.email },
+          { signal: controller.signal },
         );
         setCategories(categoriesList);
-      } catch {
-
+      } catch (error) {
+        console.log(error);
       } finally {
         setLoadingCategories(false);
       }
@@ -61,7 +62,7 @@ export default function useContactForm(onSubmit, ref) {
     return () => {
       controller.abort();
     };
-  }, [setCategories, setLoadingCategories, userData?.email]);
+  }, [setCategories, setLoadingCategories]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
