@@ -8,7 +8,7 @@ class CategoriesRepository {
 
   async create({ name, email }) {
     const [row] = await db.query(`
-    INSERT INTO categories (name, categories.created_by_email)
+    INSERT INTO categories (name, created_by_email)
     VALUES($1, $2)
     RETURNING *`, [name, email]);
     return row;
