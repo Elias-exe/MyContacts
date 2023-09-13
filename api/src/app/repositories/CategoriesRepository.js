@@ -1,11 +1,11 @@
 const db = require('../../database/index');
 
 class CategoriesRepository {
-  async findAll({ email }) {
+  async findAll({ created_by_email }) {
     const rows = await db.query(`
     SELECT categories.* FROM categories
     WHERE categories.created_by_email = $1
-    ORDER BY name`, [email]);
+    ORDER BY name`, [created_by_email]);
     return rows;
   }
 
