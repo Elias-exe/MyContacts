@@ -20,7 +20,7 @@ class CategoryController {
       return response.status(400).json({ error: 'CreatedBy is required' })
     }
 
-    const createdBy = await AccountRepository.findByEmail({ created_by_email })
+    const createdBy = await AccountRepository.findByEmail({ email:created_by_email })
 
     if (!createdBy) {
       return response.status(400).json({ error: 'Email not found' })
