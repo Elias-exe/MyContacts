@@ -3,8 +3,8 @@ const CategoriesRepository = require('../repositories/CategoriesRepository');
 
 class CategoryController {
   async index(request, response) {
-    const { created_by_email } = request.params;
-
+    const { email } = request.params;
+    const created_by_email = email;
     const categories = await CategoriesRepository.findAll(created_by_email);
     return response.json(categories);
   }
