@@ -6,8 +6,9 @@ class CategoriesService {
     this.httpClient = new HttpClient('https://mycontacts-api-4mqf.onrender.com');
   }
 
-  async listCategories(signal, body) {
-    const categories = await this.httpClient.get('/categories', { signal, body });
+  async listCategories({ signal, body }) {
+    console.log(body);
+    const categories = await this.httpClient.get('/categories', { signal });
     return categories.map(CategoryMapper.toDomain);
   }
 

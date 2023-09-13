@@ -43,15 +43,16 @@ export default function useContactForm(onSubmit, ref) {
 
     async function loadCategories() {
       try {
-        // const data = {
-        //   createdBy: userData?.email,
-        // };
-        const categoriesList = await CategoriesService.listCategories(
-          { signal: controller.signal },
-        );
+        const data = {
+          created_by_email: userData?.email,
+        };
+
+        const categoriesList = await CategoriesService.listCategories({
+          signal: controller.signal,
+          body: data,
+        });
         setCategories(categoriesList);
       } catch (error) {
-        console.log(error);
       } finally {
         setLoadingCategories(false);
       }

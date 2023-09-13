@@ -10,7 +10,7 @@ class HttpClient {
       method: 'GET',
       body: options?.body,
       headers: options?.headers,
-      // signal: options?.signal,
+      signal: options?.signal,
     });
   }
 
