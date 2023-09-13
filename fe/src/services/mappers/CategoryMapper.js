@@ -3,14 +3,14 @@ class CategoryMapper {
     return {
       id: categoryPersistence.id,
       name: categoryPersistence.name,
-      createdBy: categoryPersistence.CreatedBy,
+      email: categoryPersistence.email,
     };
   }
 
   toPersistence(categoryDomain) {
     return {
       name: categoryDomain.name,
-      createdBy: categoryDomain.CreatedBy,
+      email: categoryDomain.email,
     };
   }
 }

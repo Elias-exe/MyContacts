@@ -27,8 +27,9 @@ export default function useCategories() {
   async function handleSubmit(category) {
     const data = {
       ...category,
-      CreatedBy: userData?.email,
+      email: userData?.email,
     };
+    console.log(data);
     try {
       await CategoriesService.createCategory(data);
       toast({
