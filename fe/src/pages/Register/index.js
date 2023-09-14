@@ -16,6 +16,7 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [submiting, setSubmiting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
   const safeAsyncAction = useSafeAsyncAction();
@@ -63,6 +64,7 @@ export default function Register() {
     };
 
     try {
+      setIsLoading(true);
       await AccountsService.createAccount(body);
       safeAsyncAction(() => {
         navigate('/login', { replace: true });
@@ -72,13 +74,26 @@ export default function Register() {
         });
       });
     } catch (error) {
-      toast({
-        type: 'danger',
-        text: error.message,
-      });
+      if (error.message === 'E-mail already by taken!') {
+        toast(
+          {
+            type: 'danger',
+            text: 'E-mail já cadastrado!',
+          },
+        );
+      } else {
+        toast(
+          {
+            type: 'danger',
+            text: 'Ocorreu um erro ao cadastrar a conta',
+          },
+        );
+      }
       setEmail('');
       setPassword('');
       setConfirmPassword('');
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -131,6 +146,7 @@ export default function Register() {
             type="submit"
             onClick={handleSubmit}
             disabled={errors.length !== 0 || !submiting}
+            isLoading={isLoading}
           >
             Create
           </Button>

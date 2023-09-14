@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { createContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TokenService from '../services/TokenService';
+import toast from '../utils/toast';
 
 const Context = createContext();
 function AuthProvider({ children }) {
@@ -22,7 +23,14 @@ function AuthProvider({ children }) {
           await TokenService.validateToken(headers);
           setAuthenticated(true);
         } catch {
+          localStorage.removeItem('token');
           navigate('/');
+          toast(
+            {
+              type: 'danger',
+              text: 'Sessão expirada',
+            },
+          );
         }
       }
       setLoading(false);
@@ -39,6 +47,7 @@ function AuthProvider({ children }) {
       setAuthenticated(true);
       navigate('/home');
     } catch (error) {
+      localStorage.removeItem('token');
     }
   }
 

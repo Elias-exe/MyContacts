@@ -7,7 +7,7 @@ export const Container = styled.div`
 export const Card = styled.div`
   display: flex;
   width: 100%;
-  height: 350px;
+  height: 50%;
   padding: 8px;
   background-color: ${({ theme }) => theme.colors.background};
   align-items: center;
