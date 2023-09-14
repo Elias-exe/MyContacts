@@ -7,7 +7,6 @@ class CategoriesService {
   }
 
   async listCategories({ signal, body }) {
-    console.log(body);
     const categories = await this.httpClient.post('/listCategories', { signal, body });
     return categories.map(CategoryMapper.toDomain);
   }

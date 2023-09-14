@@ -18,7 +18,6 @@ export default function useCategories() {
         }
       }
     } catch (error) {
-      console.log('caiu aqui');
     }
   }, []);
 
@@ -27,7 +26,6 @@ export default function useCategories() {
       ...category,
       created_by_email: userData?.email,
     };
-    console.log(data);
     try {
       await CategoriesService.createCategory(data);
       toast({

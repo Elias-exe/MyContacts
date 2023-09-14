@@ -63,7 +63,7 @@ export default function useEditContact() {
     return () => {
       controller.abort();
     };
-  }, [params, safeAsyncAction]);
+  }, [params, safeAsyncAction, navigate]);
 
   return {
     isLoading,

@@ -39,7 +39,6 @@ function AuthProvider({ children }) {
       setAuthenticated(true);
       navigate('/home');
     } catch (error) {
-      console.log(error);
     }
   }
 

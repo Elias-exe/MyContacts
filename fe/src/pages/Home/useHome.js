@@ -60,7 +60,6 @@ export default function useHome() {
         }
       }
     } catch (error) {
-      console.log('caiu aqui');
     }
   }, []);
 

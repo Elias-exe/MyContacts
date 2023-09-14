@@ -32,7 +32,9 @@ const ContactForm = forwardRef(({ buttonLabel, onSubmit }, ref) => {
 
   return (
     <Form onSubmit={handleSubmit} noValidate>
-      <FormGroup error={getErrorMessageByFieldName('name')}>
+      <FormGroup
+        error={getErrorMessageByFieldName('name')}
+      >
         <Input
           error={getErrorMessageByFieldName('name')}
           placeholder="Nome *"
