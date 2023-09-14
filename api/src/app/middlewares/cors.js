@@ -2,6 +2,7 @@ module.exports = (request,response,next) =>{
 
   const allowedOrigins =  [
     "http://localhost:3000",
+    "https://mycontacts-f39f0.web.app"
   ]
 
   const origin = request.header('Origin')
